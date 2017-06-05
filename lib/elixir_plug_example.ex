@@ -1,13 +1,17 @@
 defmodule ElixirPlugExample do
-  import Plug.Conn
+  use Plug.Router
 
-  def init(options) do
-    options
+  plug Plug.Logger
+  plug :match
+  plug :dispatch
+
+  get "/hello" do
+    send_resp(conn, 200, "world")
   end
 
-  def call(conn, _opts) do
-    conn
-    |> put_resp_content_type("text/plain")
-    |> send_resp(200, "Hello World")
+  #  forward "/users", to: UsersRouter
+
+  match _ do
+    send_resp(conn, 404, "not found - oops")
   end
 end
